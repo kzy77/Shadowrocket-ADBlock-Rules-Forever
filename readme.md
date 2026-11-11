@@ -323,7 +323,7 @@ INTP | Jack of all trades | I use Arch BTW
 
 上游更新后（Nightly build 提交了新的 `lazy_group.conf`），`git pull` 后重跑第 2 步即可完成合并。
 
-注意：ByteDance.list 含 `tiktok.com` 等国际域名，会被一并强制直连；如需 TikTok 国际版走代理，可在 `custom_rules.conf` 字节直连之后补充 `RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/TikTok/TikTok.list,TIKTOK` 实现局部反覆盖。
+注意：ByteDance.list 含一条 `USER-AGENT,TikTok*` 规则，TikTok App 的 HTTP 请求会被强制直连（网页版不受影响，仍走 TIKTOK 分组）；如需 TikTok App 走代理，可在 `custom_rules.conf` 字节直连之后补充 `USER-AGENT,TikTok*,TIKTOK` 实现局部反覆盖。
 
 ## 鸣谢
 
