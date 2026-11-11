@@ -307,6 +307,23 @@ INTP | Jack of all trades | I use Arch BTW
 
 ![二维码](https://johnshall.github.io/Shadowrocket-ADBlock-Rules-Forever/figure/lazy_group.png)
 
+## 自定义规则用法（lazy_group_plus.conf）
+
+在「懒人配置（含策略组）」基础上添加个人自定义规则，且上游每日更新后无需手工合并。三个相关文件：
+
+- `custom_rules.conf`：**唯一维护点**。自定义规则只写在这里，按「`# 分类注释` + 规则行」追加即可；
+- `merge_plus.py`：合成脚本。读取最新的 `lazy_group.conf`，把 `custom_rules.conf` 注入到 `[Rule]` 区最顶部（自上而下匹配、先命中先生效，因此自定义规则**覆盖**上游同域名规则），生成 `lazy_group_plus.conf`；
+- `lazy_group_plus.conf`：纯生成物，请勿手工编辑，Shadowrocket 实际使用这个文件。
+
+日常流程：
+
+1. 修改 `custom_rules.conf`（首条示例：字节系全部直连，引用 blackmatrix7 ByteDance.list → DIRECT）；
+2. 运行 `python3 merge_plus.py`（幂等，可重复运行）；
+3. Shadowrocket 中更新 `lazy_group_plus.conf` 订阅。
+
+上游更新后（Nightly build 提交了新的 `lazy_group.conf`），`git pull` 后重跑第 2 步即可完成合并。
+
+注意：ByteDance.list 含 `tiktok.com` 等国际域名，会被一并强制直连；如需 TikTok 国际版走代理，可在 `custom_rules.conf` 字节直连之后补充 `RULE-SET,https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Shadowrocket/TikTok/TikTok.list,TIKTOK` 实现局部反覆盖。
 
 ## 鸣谢
 
