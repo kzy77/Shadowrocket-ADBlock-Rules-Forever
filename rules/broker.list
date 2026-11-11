@@ -1,0 +1,39 @@
+# NAME: Broker
+# DESC: 券商域名清单（老虎证券 Tiger / uSmart HK / 盈透 IBKR）
+# INFO: 由本仓库自行维护，供 lazy_group_plus.conf 以单行 RULE-SET 引用
+# 切换策略：修改 custom_rules.conf 中该 RULE-SET 行末尾的 DIRECT / PROXY，重跑 merge_plus.py
+
+# ---- 老虎证券（Tiger Brokers / Tiger Fintech） ----
+DOMAIN-SUFFIX,ftfast.com
+DOMAIN-SUFFIX,iotaskyt.com
+DOMAIN-SUFFIX,iotaskyty.com
+DOMAIN-SUFFIX,itiger.com
+DOMAIN-SUFFIX,itigergrowtha.com
+DOMAIN-SUFFIX,itigerup.com
+DOMAIN-SUFFIX,laohu8.com
+DOMAIN-SUFFIX,play-analytics.com
+DOMAIN-SUFFIX,skytigris.cn
+DOMAIN-SUFFIX,tbdesk.com
+DOMAIN-SUFFIX,tigerbbs.cn
+DOMAIN-SUFFIX,tigerbbs.com
+DOMAIN-SUFFIX,tigerbrokers.com
+DOMAIN-SUFFIX,tigerbrokers.net
+DOMAIN-SUFFIX,tigerbrokers.nz
+DOMAIN-SUFFIX,tigerfintech.com
+DOMAIN-SUFFIX,tigertcp.cn
+DOMAIN-SUFFIX,tigr.link
+DOMAIN-SUFFIX,xiaohu8.com
+DOMAIN-SUFFIX,zhijianfengyi.cn
+DOMAIN-SUFFIX,zhijianfengyi.com
+
+# ---- uSmart HK ----
+DOMAIN-SUFFIX,usmart.hk
+DOMAIN-SUFFIX,usmarthk.com
+DOMAIN-SUFFIX,usmartsecurities.com
+
+# ---- 盈透证券（Interactive Brokers / IBKR） ----
+DOMAIN-SUFFIX,interactivebrokers.com
+DOMAIN-SUFFIX,interactivebrokers.co.uk
+DOMAIN-SUFFIX,ibkr.com
+DOMAIN-SUFFIX,ibkr.info
+DOMAIN-SUFFIX,ibllc.com

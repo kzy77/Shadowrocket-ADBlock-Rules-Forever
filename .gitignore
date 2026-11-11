@@ -1,0 +1,12 @@
+# 上游规则备份（体积大、可随时用 tools/fetch_rules.py 重下）
+rules/sync/
+
+# 编辑器 / 工具目录
+.codebuddy/
+.claude/
+.vscode/
+.DS_Store
+
+# 临时文件
+*.bak
+*.tmp

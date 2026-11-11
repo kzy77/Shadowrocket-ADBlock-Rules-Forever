@@ -1,0 +1,9 @@
+# NAME: Custom-Proxy
+# DESC: 手工代理补充清单（默认 PROXY，可在引用行末尾改成 DIRECT 整组切换）
+# INFO: 由本仓库自行维护，供 lazy_group_plus.conf 以单行 RULE-SET 引用
+
+DOMAIN-SUFFIX,cloudflare.com
+DOMAIN-SUFFIX,tencentcloud.com
+DOMAIN-SUFFIX,edgeone.ai
+DOMAIN-SUFFIX,linux.do
+DOMAIN-SUFFIX,routinehub.co

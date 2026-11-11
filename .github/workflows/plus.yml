@@ -1,0 +1,55 @@
+name: Build lazy_group_plus
+
+on:
+  push:
+    branches:
+      - release
+    paths:
+      - 'lazy_group.conf'
+      - 'custom_rules.conf'
+      - 'custom_extra.conf'
+      - 'merge_plus.py'
+      - 'rules/*.list'
+
+  workflow_dispatch:
+
+  # 上游 nightly 每日北京时间 08:00 更新 lazy_group.conf，这里 09:00 兜底重跑一次
+  schedule:
+    - cron: '0 1 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-plus
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release
+        uses: actions/checkout@v4
+        with:
+          ref: release
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Merge custom rules and sections
+        run: python3 merge_plus.py
+
+      - name: Commit and push if changed
+        run: |
+          if [ -z "$(git status --porcelain lazy_group_plus.conf)" ]; then
+            echo "lazy_group_plus.conf 无变化，跳过提交"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add lazy_group_plus.conf
+          git commit -m "chore: 自动生成 lazy_group_plus.conf [skip ci]"
+          git push

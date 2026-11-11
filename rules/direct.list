@@ -1,0 +1,10 @@
+# NAME: Custom-Direct
+# DESC: 手工直连补充清单（默认 DIRECT，可在引用行末尾改成 PROXY 整组切换）
+# INFO: 由本仓库自行维护，供 lazy_group_plus.conf 以单行 RULE-SET 引用
+
+DOMAIN-SUFFIX,snssdk.com
+DOMAIN-SUFFIX,cloudflareinsights.com
+DOMAIN-SUFFIX,edge.microsoft.com
+DOMAIN-SUFFIX,apple.com
+DOMAIN-SUFFIX,icloud.com
+DOMAIN-SUFFIX,mgtv.ottiptv.cc
