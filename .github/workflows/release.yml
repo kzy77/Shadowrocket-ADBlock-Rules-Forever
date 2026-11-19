@@ -4,23 +4,9 @@ on:
   schedule:
     # 每日8时开始
     - cron:  '0 23 * * *'
-  
-  push:
-    branches:
-      - build
-    paths-ignore: 
-      - '**.md'
-      - 'LICENSE'
-      
-  pull_request_target:
-    branches:
-      - build
-    paths-ignore: 
-      - '**.md'
-      - 'LICENSE'
 
   workflow_dispatch:
-  
+
 jobs:
   Release:
     runs-on: ubuntu-latest
@@ -42,7 +28,7 @@ jobs:
         run: |
           cd build || exit 1
           ./factory/auto_build.sh
-      
+
       - name: Move files
         run: |
           cd build || exit 1
@@ -50,14 +36,14 @@ jobs:
           cp -r figure ../release/
           cp LICENSE ../release/
           cp readme.md ../release/
-      
+
       - name: Update lazy rules
         run: |
           cd release || exit 1
           rm lazy.conf lazy_group.conf
           curl -O https://raw.githubusercontent.com/LOWERTOP/Shadowrocket/main/lazy.conf
           curl -O https://raw.githubusercontent.com/LOWERTOP/Shadowrocket/main/lazy_group.conf
-        
+
       - name: Remove commits
         run: |
           cd release || exit 1
