@@ -1,7 +1,11 @@
 name: Close inactive issues
+
+# 已暂停：取消每日定时触发，仅保留手动入口。
+# 需要恢复自动清理时，把下面注释掉的 schedule 放开即可。
 on:
-  schedule:
-    - cron: "30 1 * * *"
+  # schedule:
+  #   - cron: "30 1 * * *"
+  workflow_dispatch:
 
 jobs:
   close-issues:

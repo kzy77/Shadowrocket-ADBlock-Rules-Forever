@@ -1,57 +1,68 @@
 name: Release Shadowrocket Rules
 
 on:
+  # 任何推送到 release 分支都会重建 lazy_group_plus.conf
+  push:
+    branches:
+      - release
+    paths-ignore:
+      # 生成物自身的提交不触发（避免自激循环）
+      - 'lazy_group_plus.conf'
+      - '**.md'
+      - 'LICENSE'
+
   schedule:
-    # 每日8时开始
-    - cron:  '0 23 * * *'
+    # 上游（LOWERTOP/Shadowrocket）nightly 每日北京时间 08:00 更新 lazy*.conf，
+    # 这里 09:00 拉取最新上游配置并重建
+    - cron: '0 1 * * *'
 
   workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-release
+  cancel-in-progress: true
 
 jobs:
   Release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: build
-          path: build
-
-      - uses: actions/checkout@v4
+      - name: Checkout release
+        uses: actions/checkout@v4
         with:
           ref: release
-          path: release
+          fetch-depth: 0
 
-      - name: Install requirements
-        run: pip3 install -r build/requirements.txt
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
 
-      - name: Build Rules
+      # 仅在定时/手动运行时同步上游，push 触发的构建基于仓库内已有文件，
+      # 避免把刚提交的本地修改又覆盖回上游版本
+      - name: Sync upstream lazy configs
+        if: github.event_name != 'push'
         run: |
-          cd build || exit 1
-          ./factory/auto_build.sh
+          set -euo pipefail
+          curl -fsSL -o lazy.conf https://raw.githubusercontent.com/LOWERTOP/Shadowrocket/main/lazy.conf
+          curl -fsSL -o lazy_group.conf https://raw.githubusercontent.com/LOWERTOP/Shadowrocket/main/lazy_group.conf
+          # 上游默认 ipv6 = true，本项目统一关闭 IPv6，防止每次同步被改回
+          sed -i 's/^ipv6 = true$/ipv6 = false/' lazy.conf lazy_group.conf
 
-      - name: Move files
-        run: |
-          cd build || exit 1
-          cp *.conf ../release/
-          cp -r figure ../release/
-          cp LICENSE ../release/
-          cp readme.md ../release/
+      - name: Build lazy_group_plus.conf
+        run: python3 merge_plus.py
 
-      - name: Update lazy rules
+      - name: Commit and push
         run: |
-          cd release || exit 1
-          rm lazy.conf lazy_group.conf
-          curl -O https://raw.githubusercontent.com/LOWERTOP/Shadowrocket/main/lazy.conf
-          curl -O https://raw.githubusercontent.com/LOWERTOP/Shadowrocket/main/lazy_group.conf
-
-      - name: Remove commits
-        run: |
-          cd release || exit 1
+          set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git checkout --orphan latest_branch
-          git add -A
-          git commit -am "Nightly build"
-          git branch -D release
-          git branch -m release
-          git push -f origin release
+          git add lazy.conf lazy_group.conf lazy_group_plus.conf
+          if git diff --cached --quiet; then
+            echo "配置无变化，跳过提交"
+            exit 0
+          fi
+          git commit -m "chore: 同步上游 lazy 配置并重建 lazy_group_plus.conf [skip ci]"
+          git push

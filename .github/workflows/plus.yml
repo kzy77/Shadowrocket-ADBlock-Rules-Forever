@@ -1,28 +1,16 @@
-name: Build lazy_group_plus
+name: Build lazy_group_plus (manual)
 
+# push / 定时构建已并入 release.yml（推送 release 分支即自动重建 lazy_group_plus.conf）。
+# 此工作流只保留手动入口：Actions 页面选择本工作流 Run workflow，立即按仓库内现有文件重建一次。
 on:
-  push:
-    branches:
-      - release
-    paths:
-      - 'lazy_group.conf'
-      - 'custom_rules.conf'
-      - 'custom_extra.conf'
-      - 'merge_plus.py'
-      - 'rules/*.list'
-
   workflow_dispatch:
-
-  # 上游 nightly 每日北京时间 08:00 更新 lazy_group.conf，这里 09:00 兜底重跑一次
-  schedule:
-    - cron: '0 1 * * *'
 
 permissions:
   contents: write
 
 concurrency:
-  group: build-plus
-  cancel-in-progress: true
+  group: build-release
+  cancel-in-progress: false
 
 jobs:
   build:
