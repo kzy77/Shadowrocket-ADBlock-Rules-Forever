@@ -1,0 +1,20 @@
+# NAME: Custom-WZRY-Block
+# DESC: 王者荣耀自动下载/更新域名屏蔽清单（整组放行：把 custom_rules.conf 引用行末尾的 REJECT 改成 DIRECT）
+# INFO: 由本仓库自行维护，供 lazy_group_plus.conf 以单行 RULE-SET 引用；只拦下载/更新，登录、匹配、对战不受影响
+
+# ---- 更新入口：启动版本检查后用于获取下载服务器地址（腾讯游戏通用下载通道）----
+DOMAIN,down.qq.com
+DOMAIN-SUFFIX,down-update.qq.com
+
+# ---- 更新包/资源包 CDN：update1.dlied.qq.com、update5.dlied.qq.com、dlied1.qq.com 等 ----
+DOMAIN-SUFFIX,dlied.qq.com
+DOMAIN-SUFFIX,dlied1.qq.com
+DOMAIN,dlied1.tcdn.qq.com
+
+# ---- 兜底：覆盖腾讯后续新增的 dlied 系 CDN 变体（若发现误伤，删除本行即可）----
+DOMAIN-KEYWORD,dlied
+
+# 说明：
+# 1) Shadowrocket 规则不区分 Wi-Fi/蜂窝，本清单在两种网络下均生效。
+# 2) 需要手动更新游戏时：把 custom_rules.conf 引用行的 REJECT 改成 DIRECT，重跑 python3 merge_plus.py。
+# 3) 不屏蔽 gateway.tgp.qq.com（匹配网关）、app.smoba.qq.com、image.smoba.qq.com、pvp.qq.com，保证对战与大厅正常。
