@@ -36,13 +36,10 @@ EXTRA_SECTIONS = ("Proxy Group", "Host", "URL Rewrite", "MITM")
 
 # ---- 规则集地址加速 ----
 # 把 raw.githubusercontent.com 改写为 jsDelivr CDN，规避国内直连抽风。
-# 固定使用 Fastly 端点：cdn.jsdelivr.net 在多 CDN 间轮询，分支缓存 12 小时且
-# purge 不一定覆盖到实际命中的 PoP，实测常出现「已推送但设备仍拉到旧配置」；
-# fastly.jsdelivr.net 单端点、purge 即时生效，便于改完立刻验证。
 # 关闭方式：python3 merge_plus.py --no-cdn
 USE_CDN = True
 RAW_RE = re.compile(r"^https://raw\.githubusercontent\.com/([^/]+)/([^/]+)/([^/]+)/(.+)$")
-CDN_TPL = "https://fastly.jsdelivr.net/gh/{owner}/{repo}@{branch}/{path}"
+CDN_TPL = "https://cdn.jsdelivr.net/gh/{owner}/{repo}@{branch}/{path}"
 
 GENERATED_NOTE = (
     "# 本文件由 merge_plus.py 自动生成，请勿手工编辑！\n"
